@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <title>Form Validation - Model#validate</title>
+  <script src='http://code.jquery.com/jquery.js'></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/0.6.0/lodash.min.js'></script>
+  <script src='http://backbonejs.org/backbone.js'></script>
+  <sript src='../src/javascript/Backbone.validateAll.js'></script>
+  <script>
+    jQuery(function($) {
+      
+      var User = Backbone.Model.extend({
+          // RegEx Patterns
+          // ==============
+          patterns: {
+
+              specialCharacters: "[^a-zA-Z 0-9]+",
+
+              digits: "[0-9]",
+
+              email: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9][a-zA-Z0-9.-]*[.]{1}[a-zA-Z]{2,6}$",
+
+              phone: "^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
+
+          },
+
+          // Validators
+          // ==========
+          validators: {
+
+              minLength: function(value, minLength) {
+                
+                  console.log("minLength validation called");
+
+                  return value.length >= minLength;
+
+              },
+
+              maxLength: function(value, maxLength) {
+
+                  console.log("maxLength validation called");
+                
+                  return value.length <= maxLength;
+
+              },
+
+              pattern: function(value, pattern) {
+
+                  return new RegExp(pattern, "gi").test(value) ? true : false;
+
+              },
+
+              isEmail: function(value) {
+ 
+                  console.log("isEmail validation called");
+  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.email);
+
+              },
+
+              isPhone: function(value) {
+
+                  console.log("isPhone validation called");
+                  return User.prototype.validators.pattern(value, User.prototype.patterns.phone);
+
+              },
+
+              hasSpecialCharacter: function(value) {
+
+                  console.log("hasSpecialCharacter validation called");
+  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.specialCharacters);
+
+              },
+
+              hasDigit: function(value) {
+
+                  console.log("hasDigit validation called");
+                  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.digits);
+
+              }
+
+          },        
+          validate: function(attrs) {
+            
+              var errors = this.errors = {};
+          
+              if(attrs.firstname != null) {
+                  if (!attrs.firstname) {
+                      errors.firstname = 'firstname is required';
+                      console.log('first name isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.firstname, 2)) errors.firstname = 'firstname is too short';
+                  else if(!this.validators.maxLength(attrs.firstname, 15)) errors.firstname = 'firstname is too large';
+                  else if(this.validators.hasSpecialCharacter(attrs.firstname)) errors.firstname = 'firstname cannot contain special characters';
+              }
+
+              if(attrs.lastname != null) {
+
+                  if (!attrs.lastname) {
+                      errors.lastname = 'lastname is required';
+                      console.log('last name isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.lastname, 2)) errors.lastname = 'lastname is too short';
+                  else if(!this.validators.maxLength(attrs.lastname, 15)) errors.lastname = 'lastname is too large';
+                  else if(this.validators.hasSpecialCharacter(attrs.lastname)) errors.lastname = 'lastname cannot contain special characters';  
+
+              }
+
+              if(attrs.password != null) {
+
+                  if(!attrs.password) {
+                      errors.password = 'password is required';
+                      console.log('password isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.password, 6)) errors.password = 'password is too short';
+                  else if(!this.validators.maxLength(attrs.password, 15)) errors.password = 'password is too big';
+                  else if(!this.validators.hasSpecialCharacter(attrs.password)) errors.password = 'password must contain a special character';
+                  else if(!this.validators.hasDigit(attrs.password)) errors.password = 'password must contain a digit';
+
+              }           
+              
+              if(attrs.email != null) {
+
+                  if (!attrs.email) {
+                      errors.email = 'email is required';
+                      console.log('email isEmpty validation called');
+                  }  
+                  else if(!this.validators.isEmail(attrs.email)) errors.email = 'email is not valid';
+
+              }
+            
+              if(attrs.phone != null) {
+
+                  if(!attrs.phone) {
+                      errors.phone = 'phone is required';
+                      console.log('phone isEmpty validation called');
+                  }
+                  else if(!this.validators.isPhone(attrs.phone)) errors.phone = 'phone number is invalid';
+
+              }
+          
+              if (!_.isEmpty(errors)) return errors;
+          }
+      });
+      
+      var Field = Backbone.View.extend({
+        events: {blur: 'validate'},
+        initialize: function() {
+          this.name = this.$el.attr('name');
+          this.$msg = $('[data-msg=' + this.name + ']');
+        },
+        validate: function() {
+          this.model.set(this.name, this.$el.val(), {validateAll: false});
+          this.$msg.text(this.model.errors[this.name] || '');
+        }
+      });
+      
+      var user = new User;
+      
+      $('input').each(function() {
+        new Field({el: this, model: user});
+      });
+      
+    });
+  </script>
+</head>
+<body>
+  <form>
+    <label>First Name</label>
+    <input name='firstname'>
+    <span data-msg='firstname'></span>
+    <br>
+    <label>Last Name</label>
+    <input name='lastname'>
+    <span data-msg='lastname'></span>
+    <br>
+    <label>Password</label>
+    <input name='password'>
+    <span data-msg='password'></span>
+    <br> 
+    <label>Email</label>
+    <input name='email'>
+    <span data-msg='email'></span>
+    <br>
+    <label>Phone</label>
+    <input name='phone'>
+    <span data-msg='phone'></span>    
+  </form>
+</body>
+</html>
