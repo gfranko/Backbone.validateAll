@@ -16,9 +16,163 @@ Backbone core contributor, [@braddunbar](https://github.com/braddunbar), present
 
 Backbone.validateAll allows you to know which Model property is being set/saved during the validation process.
 
+##Who Should Use This
+
+Anyone who wants the ability to not validate all Model properties when attributes are set on a Model.  An obvious use case for this is HTML forms.
+
 ##Dependencies
 [Backbone](http://www.backbonejs.org)
 [Lodash](http://www.lodash.com)
+
+##Getting Started
+   **Note**: This Getting Started example assumes a Registration form
+
+#Set Up a Backbone Model and Validate Method
+      // Creates a User Model
+      var User = Backbone.Model.extend({
+
+          // RegEx Patterns
+          // ==============
+          patterns: {
+
+              specialCharacters: "[^a-zA-Z 0-9]+",
+
+              digits: "[0-9]",
+
+              email: "^[a-zA-Z0-9._-]+@[a-zA-Z0-9][a-zA-Z0-9.-]*[.]{1}[a-zA-Z]{2,6}$",
+
+              phone: "^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
+
+          },
+
+          // Validators
+          // ==========
+          validators: {
+
+              minLength: function(value, minLength) {
+                
+                  console.log("minLength validation called");
+
+                  return value.length >= minLength;
+
+              },
+
+              maxLength: function(value, maxLength) {
+
+                  console.log("maxLength validation called");
+                
+                  return value.length <= maxLength;
+
+              },
+
+              pattern: function(value, pattern) {
+
+                  return new RegExp(pattern, "gi").test(value) ? true : false;
+
+              },
+
+              isEmail: function(value) {
+ 
+                  console.log("isEmail validation called");
+  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.email);
+
+              },
+
+              isPhone: function(value) {
+
+                  console.log("isPhone validation called");
+                  return User.prototype.validators.pattern(value, User.prototype.patterns.phone);
+
+              },
+
+              hasSpecialCharacter: function(value) {
+
+                  console.log("hasSpecialCharacter validation called");
+  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.specialCharacters);
+
+              },
+
+              hasDigit: function(value) {
+
+                  console.log("hasDigit validation called");
+                  
+                return User.prototype.validators.pattern(value, User.prototype.patterns.digits);
+
+              }
+
+          },
+
+          // Is able to determine which properties are getting validated by checking to see if properties are equal to null
+          validate: function(attrs) {
+            
+              var errors = this.errors = {};
+          
+              if(attrs.firstname != null) {
+                  if (!attrs.firstname) {
+                      errors.firstname = 'firstname is required';
+                      console.log('first name isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.firstname, 2)) errors.firstname = 'firstname is too short';
+                  else if(!this.validators.maxLength(attrs.firstname, 15)) errors.firstname = 'firstname is too large';
+                  else if(this.validators.hasSpecialCharacter(attrs.firstname)) errors.firstname = 'firstname cannot contain special characters';
+              }
+
+              if(attrs.lastname != null) {
+
+                  if (!attrs.lastname) {
+                      errors.lastname = 'lastname is required';
+                      console.log('last name isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.lastname, 2)) errors.lastname = 'lastname is too short';
+                  else if(!this.validators.maxLength(attrs.lastname, 15)) errors.lastname = 'lastname is too large';
+                  else if(this.validators.hasSpecialCharacter(attrs.lastname)) errors.lastname = 'lastname cannot contain special characters';  
+
+              }
+
+              if(attrs.password != null) {
+
+                  if(!attrs.password) {
+                      errors.password = 'password is required';
+                      console.log('password isEmpty validation called');
+                  }
+                  else if(!this.validators.minLength(attrs.password, 6)) errors.password = 'password is too short';
+                  else if(!this.validators.maxLength(attrs.password, 15)) errors.password = 'password is too big';
+                  else if(!this.validators.hasSpecialCharacter(attrs.password)) errors.password = 'password must contain a special character';
+                  else if(!this.validators.hasDigit(attrs.password)) errors.password = 'password must contain a digit';
+
+              }           
+              
+              if(attrs.email != null) {
+
+                  if (!attrs.email) {
+                      errors.email = 'email is required';
+                      console.log('email isEmpty validation called');
+                  }  
+                  else if(!this.validators.isEmail(attrs.email)) errors.email = 'email is not valid';
+
+              }
+            
+              if(attrs.phone != null) {
+
+                  if(!attrs.phone) {
+                      errors.phone = 'phone is required';
+                      console.log('phone isEmpty validation called');
+                  }
+                  else if(!this.validators.isPhone(attrs.phone)) errors.phone = 'phone number is invalid';
+
+              }
+          
+              if (!_.isEmpty(errors)) return errors;
+          }
+      });
+
+#Create a Model instance
+    var user = new User();
+
+#Set data on your model using the validateAll option
+    user.set({ "firstname": "Greg" }, {validateAll: false});
 
 ##Unit Tests
 All unit tests are written using the Jasmine Framework
