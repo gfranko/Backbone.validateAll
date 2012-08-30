@@ -10,7 +10,7 @@
   <script>
     jQuery(function($) {
       
-      var User = Backbone.Model.extend({
+       var User = Backbone.Model.extend({
           // RegEx Patterns
           // ==============
           patterns: {
@@ -30,8 +30,6 @@
           validators: {
 
               minLength: function(value, minLength) {
-                
-                  console.log("minLength validation called");
 
                   return value.length >= minLength;
 
@@ -39,8 +37,6 @@
 
               maxLength: function(value, maxLength) {
 
-                  console.log("maxLength validation called");
-                
                   return value.length <= maxLength;
 
               },
@@ -52,8 +48,6 @@
               },
 
               isEmail: function(value) {
- 
-                  console.log("isEmail validation called");
   
                 return User.prototype.validators.pattern(value, User.prototype.patterns.email);
 
@@ -61,22 +55,17 @@
 
               isPhone: function(value) {
 
-                  console.log("isPhone validation called");
                   return User.prototype.validators.pattern(value, User.prototype.patterns.phone);
 
               },
 
               hasSpecialCharacter: function(value) {
-
-                  console.log("hasSpecialCharacter validation called");
   
                 return User.prototype.validators.pattern(value, User.prototype.patterns.specialCharacters);
 
               },
 
               hasDigit: function(value) {
-
-                  console.log("hasDigit validation called");
                   
                 return User.prototype.validators.pattern(value, User.prototype.patterns.digits);
 
@@ -88,10 +77,7 @@
               var errors = this.errors = {};
           
               if(attrs.firstname != null) {
-                  if (!attrs.firstname) {
-                      errors.firstname = 'firstname is required';
-                      console.log('first name isEmpty validation called');
-                  }
+                  if (!attrs.firstname) errors.firstname = 'firstname is required';
                   else if(!this.validators.minLength(attrs.firstname, 2)) errors.firstname = 'firstname is too short';
                   else if(!this.validators.maxLength(attrs.firstname, 15)) errors.firstname = 'firstname is too large';
                   else if(this.validators.hasSpecialCharacter(attrs.firstname)) errors.firstname = 'firstname cannot contain special characters';
@@ -99,10 +85,7 @@
 
               if(attrs.lastname != null) {
 
-                  if (!attrs.lastname) {
-                      errors.lastname = 'lastname is required';
-                      console.log('last name isEmpty validation called');
-                  }
+                  if (!attrs.lastname) errors.lastname = 'lastname is required';
                   else if(!this.validators.minLength(attrs.lastname, 2)) errors.lastname = 'lastname is too short';
                   else if(!this.validators.maxLength(attrs.lastname, 15)) errors.lastname = 'lastname is too large';
                   else if(this.validators.hasSpecialCharacter(attrs.lastname)) errors.lastname = 'lastname cannot contain special characters';  
@@ -111,10 +94,7 @@
 
               if(attrs.password != null) {
 
-                  if(!attrs.password) {
-                      errors.password = 'password is required';
-                      console.log('password isEmpty validation called');
-                  }
+                  if(!attrs.password) errors.password = 'password is required';
                   else if(!this.validators.minLength(attrs.password, 6)) errors.password = 'password is too short';
                   else if(!this.validators.maxLength(attrs.password, 15)) errors.password = 'password is too big';
                   else if(!this.validators.hasSpecialCharacter(attrs.password)) errors.password = 'password must contain a special character';
@@ -124,20 +104,14 @@
               
               if(attrs.email != null) {
 
-                  if (!attrs.email) {
-                      errors.email = 'email is required';
-                      console.log('email isEmpty validation called');
-                  }  
+                  if (!attrs.email) errors.email = 'email is required';
                   else if(!this.validators.isEmail(attrs.email)) errors.email = 'email is not valid';
 
               }
             
               if(attrs.phone != null) {
 
-                  if(!attrs.phone) {
-                      errors.phone = 'phone is required';
-                      console.log('phone isEmpty validation called');
-                  }
+                  if(!attrs.phone) errors.phone = 'phone is required';
                   else if(!this.validators.isPhone(attrs.phone)) errors.phone = 'phone number is invalid';
 
               }
@@ -153,7 +127,7 @@
           this.$msg = $('[data-msg=' + this.name + ']');
         },
         validate: function() {
-          this.model.set(this.name, this.$el.val(), {validateAll: false});
+          this.model.set(this.name, this.$el.val(), {validateAll: true});
           this.$msg.text(this.model.errors[this.name] || '');
         }
       });
