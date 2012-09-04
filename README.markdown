@@ -20,7 +20,9 @@ Backbone.validateAll allows you to know which Model property is being set/saved 
 
 ##Who Should Use This
 
-Anyone who wants the ability to not validate all Model properties when one or more Model attributes are set on a Model.  An obvious use case for this is form validation.
+Anyone who wants an **option** to validate only Model properties that are currently being set/saved instead of the entire Model.  An obvious use case for this is form validation.
+
+**Note**: The plugin does not override the default Backbone.js Model validation behavior (all Model attributes are validated whenever an attribute is saved/set on a Model) by default.  You need to pass the **validateAll** option when setting/saving Model attributes.
 
 ##Dependencies
 [Backbone](http://www.backbonejs.org)
