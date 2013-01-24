@@ -2,7 +2,7 @@
   "name": "Backbone.validateAll.js",
   "title": "Backbone.js plugin that provides an option to only validate Model properties that are currently being set or saved",
   "description": "This plugin originated out of frustration with using the Backbone.js Model `validate` method when validating HTML forms.  Since Backbone.js v0.9.1 and greater, Backbone Model validation was not made to elegantly handle form validation, since the default `validate` method will validate all Model attributes, regardless of what particular attribute is being **set** or **saved**.  For certain use cases, it is necessary to only validate a certain Model property (or form field) without worrying about the validation of any other Model property (or form field).",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/gfranko/Backbone.validateAll",
   "author": {
     "name": "Greg Franko",

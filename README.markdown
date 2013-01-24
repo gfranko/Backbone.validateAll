@@ -59,7 +59,7 @@ Anyone who wants an **option** to validate only Model properties that are curren
 
 #Set data on your model using the validateAll option
     // The validateAll option makes sure that only the Model attributes that you are setting get passed to the validate method
-    user.set({ "firstname": "Greg" }, {validateAll: false});
+    user.set({ "firstname": "Greg" }, {validate: true, validateAll: false});
 
 ##Unit Tests
 All unit tests are written using the Jasmine Framework
@@ -77,6 +77,11 @@ You'll find source code in the "src" subdirectory!
 If you find that you need a feature that Backbone.validateAll does not currently support, either let me know via the Backbone.validateAll issue tracker, or fork Backbone.validateAll on Github and extend it.
 
 ##Change Log
+
+`.0.2.0` - January 23, 2013
+
+- Upgraded to support **Backbone v0.9.10**
+- Fixed demo bug [#2](https://github.com/gfranko/Backbone.validateAll/issues/2)
 
 `0.1.0` - August 29, 2012
 
