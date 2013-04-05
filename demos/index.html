@@ -4,8 +4,8 @@
   <meta charset=utf-8>
   <title>Form Validation - Model#validate</title>
   <script src='http://code.jquery.com/jquery.js'></script>
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js'></script>
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js'></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.1.1/lodash.min.js'></script>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js'></script>
   <script src='../src/javascripts/Backbone.validateAll.js'></script>
   <script>
     jQuery(function($) {
@@ -73,6 +73,8 @@
 
           },        
           validate: function(attrs) {
+
+            console.log('attrs', attrs);
             
               var errors = this.errors = {};
           

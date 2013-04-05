@@ -78,6 +78,10 @@ If you find that you need a feature that Backbone.validateAll does not currently
 
 ##Change Log
 
+`0.3.0` - April 5, 2013
+
+- Upgraded to support **Backbone v1.0.0**
+
 `.0.2.0` - January 23, 2013
 
 - Upgraded to support **Backbone v0.9.10**

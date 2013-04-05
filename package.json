@@ -23,6 +23,7 @@
     }
   ],
   "dependencies": {
+    "grunt": "0.3.17"
   },
   "keywords": ["Backbone.js", "Backbone Model Validate", "Backbone validateAll"]
 }
