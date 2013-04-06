@@ -1,7 +1,7 @@
 Backbone.validateAll
 ====================
 
-![Example](http://backbonejs.org/docs/images/backbone.png)
+![Example](http://3.bp.blogspot.com/-JFOJ-k6tLnA/TsiKgBYPvqI/AAAAAAAAAT8/dGXeu0LeuTE/s320/backbone-js-logo.png)
 
 Backbone.js plugin that provides an option to only validate Model properties that are currently being set or saved
 ------------------------------------------------------------------------------------------------------------------
